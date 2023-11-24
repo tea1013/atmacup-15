@@ -1,8 +1,9 @@
 import pickle
+from typing import Any
 
 import lightgbm as lgb
+from lightgbm import Booster
 from numpy import ndarray
-from ocha.common.logger import FileLogger, StdoutLogger
 from ocha.models.model_config import ModelConfig
 from ocha.models.model_wrapper import FitResult, ModelWrapper
 from pandas import DataFrame, Series
@@ -11,56 +12,28 @@ from ..metrics import RMSE
 
 
 class LGBMRegressionConfig(ModelConfig):
-    def __init__(
-        self,
-        save_dir: str,
-        save_file_name: str,
-        model_file_type: str,
-        seed: int,
-        categorical_features: list[str],
-        boosting_type: str = "gbdt",
-        objective: str = "regression",
-        metric: str = "rmse",
-        num_boost_round: int = 10000,
-        learning_rate: float = 0.01,
-        early_stopping_rounds: int = 500,
-        lambda_l1: float = 0.1,
-        lambda_l2: float = 0.1,
-        max_depth: int = 7,
-        feature_fraction: float = 1.0,
-        num_leaves: int = 64,
-        min_data_in_leaf: int = 100,
-        max_bin: int = 255,
-        verbose_eval: int = 100,
-        verbosity: int = -1,
-        num_threads: int = -1,
-        is_debug: bool = False,
-    ) -> None:
-        super().__init__(
-            save_dir=save_dir,
-            save_file_name=save_file_name,
-            model_file_type=model_file_type,
-        )
-
-        self.seed = seed
-        self.categorical_features = categorical_features
-        self.boosting_type = boosting_type
-        self.objective = objective
-        self.metric = metric
-        self.num_boost_round = num_boost_round
-        self.learning_rate = learning_rate
-        self.early_stopping_rounds = early_stopping_rounds
-        self.lambda_l1 = lambda_l1
-        self.lambda_l2 = lambda_l2
-        self.max_depth = max_depth
-        self.feature_fraction = feature_fraction
-        self.num_leaves = num_leaves
-        self.min_data_in_leaf = min_data_in_leaf
-        self.max_bin = max_bin
-        self.verbose_eval = verbose_eval
-        self.verbosity = verbosity
-        self.num_threads = num_threads
-        self.is_debug = is_debug
+    save_dir: str
+    save_file_name: str
+    model_file_type: str
+    seed: int
+    categorical_features: list[str]
+    boosting_type: str = "gbdt"
+    objective: str = "regression"
+    metric: str = "rmse"
+    num_boost_round: int = 10000
+    learning_rate: float = 0.01
+    early_stopping_rounds: int = 500
+    lambda_l1: float = 0.1
+    lambda_l2: float = 0.1
+    max_depth: int = 7
+    feature_fraction: float = 1.0
+    num_leaves: int = 64
+    min_data_in_leaf: int = 100
+    max_bin: int = 255
+    verbose_eval: int = 100
+    verbosity: int = -1
+    num_threads: int = -1
+    is_debug: bool = False
 
     @property
     def model_params(self) -> dict:
@@ -85,16 +58,14 @@ class LGBMRegressionConfig(ModelConfig):
 
 
 class LGBMRegression(ModelWrapper):
-    def __init__(
-        self,
-        config: LGBMRegressionConfig,
-        scoring: RMSE,
-        file_logger: FileLogger,
-        std_logger: StdoutLogger,
-    ) -> None:
-        super().__init__(config, scoring, file_logger, std_logger)
-        if config.is_debug:
-            self.std_logger.info("This is Debug Mode.")
+    config: LGBMRegressionConfig
+    scoring: RMSE
+    model: Booster | None = None
+
+    def model_post_init(self, __context: Any) -> None:
+        super().model_post_init(__context)
+        if self.config.is_debug:
+            print("This is Debug Mode.")
             self.config.num_boost_round = 1
 
     def build(self) -> None:

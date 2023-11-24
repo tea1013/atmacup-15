@@ -7,9 +7,10 @@ setup: install
 jupyter:
 	poetry run jupyter-lab
 
-fmt:
+fix:
 	poetry run black exp
 	poetry run isort exp
 
 lint:
 	poetry run pflake8 exp
+	

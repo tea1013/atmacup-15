@@ -5,10 +5,10 @@ from pandas import DataFrame
 
 
 class Atmacup15Context(Context):
-    def __init__(
-        self, train: DataFrame, test: DataFrame | None, sample_oof_df: DataFrame, sample_submission_df: DataFrame
-    ) -> None:
-        super().__init__(train, test, sample_oof_df, sample_submission_df)
+    train: DataFrame
+    test: DataFrame | None
+    sample_oof_df: DataFrame | None
+    sample_submission_df: DataFrame | None
 
     def make_oof(self, oof_prediction: ndarray) -> DataFrame:
         oof_df = self.sample_oof_df.copy()

@@ -5,9 +5,7 @@ from sklearn.metrics import mean_squared_error
 
 
 class RMSE(Metrics):
-    def __init__(self) -> None:
-        name = "RMSE"
-        super().__init__(name)
+    name: str = "RMSE"
 
     def execute(self, y_true: ndarray, y_pred: ndarray) -> float:
         return np.sqrt(mean_squared_error(y_true, y_pred))

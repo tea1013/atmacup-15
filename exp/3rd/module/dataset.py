@@ -1,10 +1,19 @@
+import pandas as pd
 from ocha.dataset.dataset import Dataset
-from pandas import DataFrame
 
 
 class Atmacup15Dataset(Dataset):
-    def __init__(self, train: DataFrame, valid: DataFrame, test: DataFrame) -> None:
-        super().__init__(train, valid, test)
+    train: pd.DataFrame
+    valid: pd.DataFrame
+    test: pd.DataFrame
+
+    train_X: pd.DataFrame | None = None
+    train_y: pd.Series | None = None
+
+    valid_X: pd.DataFrame | None = None
+    valid_y: pd.Series | None = None
+
+    test_X: pd.DataFrame | None = None
 
     @property
     def all_features(self) -> list[str]:

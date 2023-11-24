@@ -21,7 +21,8 @@ pydantic = "^2.1.1"
 lightgbm = "^4.0.0"
 scikit-learn = "^1.3.0"
 jupyterlab-vim = "^4.0.2"
-ocha = {git = "https://github.com/tea1013/ocha.git", rev = "v0.1.10"}
+ocha = {git = "https://github.com/tea1013/ocha.git"}
+prefect = "^2.14.5"
 
 [[tool.poetry.source]]
 name = "torch_cu118"
@@ -57,4 +58,4 @@ max-line-length = 120
 max-complexity = 18
 unused-arguments-ignore-abstract-functions = true
 unused-arguments-ignore-stub-functions = true
-ignore = "A002,A003,B028,N803,N806"
+ignore = "A002,A003,B028,N803,N806 W503 E202 E203 N815"

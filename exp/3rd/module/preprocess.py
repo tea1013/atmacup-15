@@ -6,8 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 
 
 class Atmacup15Preprocess(Preprocess):
-    def __init__(self, source: DataFrame) -> None:
-        super().__init__(source)
+    source: pd.DataFrame
 
     def preprocess(self) -> None:
         source = self.ip(self.source)
@@ -59,7 +58,7 @@ class Atmacup15Preprocess(Preprocess):
         return source
 
     def aired_year(self, source: DataFrame) -> DataFrame:
-        source["aired_year"] = source["aired"].str.extract("(\d{4})").astype(float)
+        source["aired_year"] = source["aired"].str.extract(r"(\d{4})").astype(float)
 
         return source
 
